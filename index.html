@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Galeri Seni Katarsis</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;500;700&display=swap');
+    * {
+      box-sizing: border-box;
+    }
+    body {
+      margin: 0;
+      font-family: 'Poppins', sans-serif;
+      background: #f7e9e3; /* pastel peach */
+      color: #4a4a4a;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    header {
+      background: #c7d7b9; /* pastel green */
+      padding: 1.5rem 2rem;
+      text-align: center;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+    header h1 {
+      margin: 0;
+      font-weight: 700;
+      color: #3a3a3a;
+      font-size: 2.5rem;
+      letter-spacing: 1.2px;
+    }
+    main {
+      flex: 1;
+      max-width: 900px;
+      margin: 2rem auto;
+      padding: 0 1rem 4rem;
+    }
+    form.upload-form {
+      background: #f4f9f4; /* pastel mint */
+      padding: 1.5rem;
+      border-radius: 12px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      margin-bottom: 2rem;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+    form.upload-form > * {
+      font-size: 1rem;
+    }
+    .full-width {
+      grid-column: 1 / -1;
+    }
+    label {
+      font-weight: 600;
+      color: #3a3a3a;
+      display: block;
+      margin-bottom: 0.3rem;
+      user-select: none;
+    }
+    input[type="text"], textarea, select {
+      width: 100%;
+      padding: 0.5rem 0.7rem;
+      border-radius: 8px;
+      border: 1.5px solid #b5cbb7;
+      resize: vertical;
+      font-size: 1rem;
+      font-family: inherit;
+    }
+    textarea {
+      min-height: 80px;
+    }
+    input[type="file"] {
+      border: none;
+      padding: 0;
+    }
+    button {
+      grid-column: 1 / -1;
+      background: #a1c89f;
+      border: none;
+      padding: 0.75rem 1rem;
+      border-radius: 12px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 1.1rem;
+      transition: background-color 0.3s ease;
+      color: #2a4d14;
+      box-shadow: 0 4px 6px rgba(42, 77, 20, 0.3);
+    }
+    button:hover {
+      background-color: #89b07e;
+    }
+    .posts {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+    article.post {
+      background: #ffffffcc;
+      border-radius: 16px;
+      padding: 1rem 1.5rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    }
+    .post-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.7rem;
+      flex-wrap: wrap;
+      gap: 0.5rem 1rem;
+    }
+    .post-title {
+      font-weight: 700;
+      font-size: 1.4rem;
+      color: #305432;
+      margin: 0;
+      flex: 1 1 60%;
+      overflow-wrap: break-word;
+    }
+    .post-meta {
+      font-size: 0.9rem;
+      font-weight: 500;
+      color: #4a4a4acc;
+      white-space: nowrap;
+      user-select: none;
+      display: flex;
+      align-items: baseline;
+      gap: 0.4rem;
+      flex-wrap: nowrap;
+    }
+    .post-type {
+      font-style: italic;
+      padding: 2px 8px;
+      border-radius: 12px;
+      background: #d2e7cf;
+      color: #2a4d14;
+      font-weight: 600;
+      font-size: 0.85rem;
+    }
+    .post-author {
+      color: #3a3a3aaa;
+    }
+    .post-date {
+      color: #3a3a3aaa;
+      font-size: 0.8rem;
+      font-style: normal;
+      user-select: none;
+    }
+    .post-content {
+      margin-bottom: 1rem;
+      font-size: 1rem;
+      line-height: 1.4;
+      white-space: pre-wrap;
+    }
+    .post-content img {
+      max-width: 100%;
+      border-radius: 12px;
+      margin-top: 0.5rem;
+      box-shadow: 0 3px 12px rgba(0,0,0,0.1);
+      user-select: none;
+    }
+    .post-content audio {
+      width: 100%;
+      margin-top: 0.5rem;
+      outline: none;
+      border-radius: 8px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+    }
+    .interactions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 1rem;
+      user-select: none;
+      flex-wrap: wrap;
+    }
+    .vote-count {
+      font-weight: 700;
+      font-size: 1.1rem;
+      color: #287233;
+    }
+    .btn-upvote,
+    .btn-edit,
+    .btn-delete,
+    .btn-cancel,
+    .btn-save {
+      cursor: pointer;
+      border: none;
+      padding: 6px 14px;
+      font-weight: 700;
+      border-radius: 12px;
+      box-shadow: 0 4px 8px rgba(27,58,23,0.3);
+      transition: background-color 0.3s ease;
+      user-select: none;
+      color: #1b3a17;
+      font-size: 0.95rem;
+    }
+    .btn-upvote {
+      background: #8cc08c;
+    }
+    .btn-upvote:hover {
+      background-color: #7ba37b;
+    }
+    .btn-edit {
+      background: #f4bf6e;
+    }
+    .btn-edit:hover {
+      background-color: #e5af5b;
+    }
+    .btn-delete {
+      background: #e27170;
+      color: #400f0f;
+      box-shadow: 0 4px 8px rgba(196, 50, 50, 0.4);
+    }
+    .btn-delete:hover {
+      background-color: #cc5a5a;
+    }
+    .btn-cancel {
+      background: #999999;
+      color: #222222;
+      box-shadow: none;
+      padding: 6px 10px;
+      font-weight: 600;
+      font-size: 0.9rem;
+    }
+    .btn-cancel:hover {
+      background-color: #777777;
+      color: #f0f0f0;
+    }
+    .btn-save {
+      background: #6aac6a;
+      color: #e9f7e9;
+      padding: 6px 12px;
+      font-weight: 600;
+      font-size: 1rem;
+    }
+    .btn-save:hover {
+      background-color: #579957;
+    }
+
+    .comments-section {
+      background: #e5f2d4aa;
+      border-radius: 14px;
+      padding: 1rem 1.2rem;
+      max-height: 360px;
+      overflow-y: auto;
+      font-size: 0.95rem;
+    }
+    .comments-list {
+      margin: 0;
+      list-style-type: none;
+      padding: 0;
+      max-height: 260px;
+      overflow-y: auto;
+    }
+    .comments-list::-webkit-scrollbar {
+      width: 6px;
+    }
+    .comments-list::-webkit-scrollbar-thumb {
+      background-color: #a3cfa2;
+      border-radius: 4px;
+    }
+    .comment-item {
+      margin-bottom: 0.7rem;
+      padding-left: 0.8rem;
+      border-left: 3px solid #98b88a;
+    }
+    .comment-author {
+      font-weight: 700;
+      color: #3d5a12;
+      margin-bottom: 0.15rem;
+      display: flex;
+      align-items: baseline;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+    .comment-date {
+      font-weight: 400;
+      font-size: 0.75rem;
+      color: #557755;
+      user-select: none;
+      font-style: italic;
+    }
+    .comment-text {
+      margin: 0;
+      white-space: pre-wrap;
+    }
+    form.comment-form {
+      margin-top: 0.7rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 0.6rem;
+      align-items: center;
+      user-select: none;
+    }
+    form.comment-form > * {
+      font-size: 0.95rem;
+    }
+    input.comment-name {
+      width: 100%;
+      padding: 0.45rem 0.8rem;
+      border-radius: 10px;
+      border: 1.5px solid #b5cbb7;
+      font-family: inherit;
+    }
+    input.comment-text {
+      width: 100%;
+      padding: 0.45rem 0.8rem;
+      border-radius: 10px;
+      border: 1.5px solid #b5cbb7;
+      font-family: inherit;
+    }
+    button.comment-submit {
+      background: #7db57d;
+      border: none;
+      padding: 0.55rem 1rem;
+      border-radius: 12px;
+      font-weight: 700;
+      cursor: pointer;
+      color: #244815;
+      box-shadow: 0 3px 8px rgba(28, 72, 20, 0.35);
+      transition: background-color 0.25s ease;
+    }
+    button.comment-submit:hover {
+      background-color: #6fa06d;
+    }
+    input.edit-name,
+    input.edit-title,
+    textarea.edit-textarea,
+    input.edit-music-url {
+      font-family: inherit;
+      font-size: 1rem;
+      padding: 0.5rem 0.7rem;
+      border-radius: 8px;
+      border: 1.5px solid #b5cbb7;
+      width: 100%;
+      margin-top: 0.4rem;
+      resize: vertical;
+    }
+    textarea.edit-textarea {
+      min-height: 80px;
+    }
+    /* Responsive */
+    @media (max-width: 600px) {
+      form.upload-form {
+        grid-template-columns: 1fr;
+      }
+      .post-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .interactions {
+        gap: 0.6rem;
+      }
+      .btn-upvote,
+      .btn-edit,
+      .btn-delete,
+      .btn-cancel,
+      .btn-save {
+        padding: 6px 10px;
+        font-size: 0.9rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Galeri Seni Katarsis</h1>
+  </header>
+
+  <main>
+    <form id="uploadForm" class="upload-form" aria-label="Form unggah karya seni">
+      <div>
+        <label for="contentType">Tipe Konten</label>
+        <select id="contentType" required>
+          <option value="poetry">Puisi / Teks</option>
+          <option value="art">Karya Seni (gambar)</option>
+          <option value="music">Musik (URL audio)</option>
+        </select>
+      </div>
+      <div>
+        <label for="authorName">Nama Pengunggah (kosongkan untuk Anonim)</label>
+        <input type="text" id="authorName" placeholder="Nama lengkap atau kosongkan" />
+      </div>
+      <div class="full-width">
+        <label for="title">Judul</label>
+        <input type="text" id="title" placeholder="Judul karya" required />
+      </div>
+      <div id="inputPoetry" class="full-width">
+        <label for="poetryContent">Isi Puisi / Teks</label>
+        <textarea id="poetryContent" placeholder="Tulis karya puisi atau teksmu di sini"></textarea>
+      </div>
+      <div id="inputArt" class="full-width" style="display:none;">
+        <label for="artFile">Unggah Gambar Karya Seni</label>
+        <input type="file" id="artFile" accept="image/*" />
+      </div>
+      <div id="inputMusic" class="full-width" style="display:none;">
+        <label for="musicURL">URL Musik (MP3 atau OGG)</label>
+        <input type="text" id="musicURL" placeholder="Tempelkan URL audio yang bisa diputar" />
+      </div>
+      <button type="submit" aria-label="Unggah karya">Unggah Karya</button>
+    </form>
+
+    <section class="posts" id="posts" aria-live="polite" aria-atomic="true">
+      <!-- posts will be appended here -->
+    </section>
+  </main>
+
+  <script>
+    (() => {
+      const contentTypeEl = document.getElementById('contentType');
+      const inputPoetry = document.getElementById('inputPoetry');
+      const inputArt = document.getElementById('inputArt');
+      const inputMusic = document.getElementById('inputMusic');
+      const poetryContent = document.getElementById('poetryContent');
+      const artFile = document.getElementById('artFile');
+      const musicURL = document.getElementById('musicURL');
+      const uploadForm = document.getElementById('uploadForm');
+      const postsContainer = document.getElementById('posts');
+
+      // LocalStorage key
+      const STORAGE_KEY = 'galeriSeniKatarsisPosts';
+
+      // Posts array in memory
+      let posts = [];
+
+      // Track edit state: id of post currently editing or null
+      let editingPostId = null;
+
+      // Helper: sanitize text to avoid HTML injection
+      function sanitizeText(str) {
+        return str.replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      // Indonesian month names
+      const monthNames = ["Januari", "Februari", "Maret", "April", "Mei", "Juni",
+                          "Juli", "Agustus", "September", "Oktober", "November", "Desember"];
+
+      /**
+       * Format ISO date string to "DD MMMM YYYY HH:mm"
+       * @param {string} isoString
+       * @returns {string}
+       */
+      function formatDateTime(isoString) {
+        const d = new Date(isoString);
+        if (isNaN(d)) return '';
+        const day = d.getDate();
+        const month = monthNames[d.getMonth()];
+        const year = d.getFullYear();
+        const hours = d.getHours().toString().padStart(2, '0');
+        const minutes = d.getMinutes().toString().padStart(2, '0');
+        return `${day} ${month} ${year} ${hours}:${minutes}`;
+      }
+
+      // Load saved posts from localStorage
+      function loadPosts() {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          try {
+            posts = JSON.parse(saved) || [];
+          } catch {
+            posts = [];
+          }
+        }
+      }
+
+      // Save posts to localStorage
+      function savePosts() {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(posts));
+      }
+
+      // Escape HTML and optionally convert new lines for display
+      function escapeAndPreserve(text) {
+        return sanitizeText(text).replace(/\n/g, '<br>');
+      }
+
+      // Render posts
+      function renderPosts() {
+        postsContainer.innerHTML = '';
+
+        if (posts.length === 0) {
+          postsContainer.innerHTML = '<p style="font-style:italic; color:#5a6f4a;">Belum ada karya seni yang diunggah. Jadilah yang pertama!</p>';
+          return;
+        }
+        // Display newest first
+        const reversedPosts = [...posts].reverse();
+
+        reversedPosts.forEach(post => {
+          const article = document.createElement('article');
+          article.className = 'post';
+          article.setAttribute('tabindex', '0');
+          article.setAttribute('aria-label', `${post.title}, oleh ${post.author || 'Anonim'}, tipe ${post.type}, ${post.votes} suara`);
+
+          // Header
+          const postHeader = document.createElement('div');
+          postHeader.className = 'post-header';
+
+          // Title or editable title input if editing
+          if (editingPostId === post.id) {
+            const editTitleInput = document.createElement('input');
+            editTitleInput.type = 'text';
+            editTitleInput.className = 'edit-title';
+            editTitleInput.value = post.title;
+            editTitleInput.setAttribute('aria-label', 'Edit judul');
+            postHeader.appendChild(editTitleInput);
+            postHeader.style.flexDirection = 'column';
+          } else {
+            const postTitle = document.createElement('h2');
+            postTitle.className = 'post-title';
+            postTitle.textContent = post.title;
+            postHeader.appendChild(postTitle);
+          }
+
+          const postMeta = document.createElement('div');
+          postMeta.className = 'post-meta';
+
+          // Author or editable author input if editing
+          if (editingPostId === post.id) {
+            const editAuthorInput = document.createElement('input');
+            editAuthorInput.type = 'text';
+            editAuthorInput.className = 'edit-name';
+            editAuthorInput.value = post.author || '';
+            editAuthorInput.placeholder = 'Nama pengunggah (kosongkan untuk anonim)';
+            editAuthorInput.setAttribute('aria-label', 'Edit nama pengunggah');
+            postMeta.appendChild(editAuthorInput);
+          } else {
+            const postAuthorSpan = document.createElement('span');
+            postAuthorSpan.className = 'post-author';
+            postAuthorSpan.textContent = post.author ? post.author : 'Anonim';
+            postMeta.appendChild(postAuthorSpan);
+          }
+
+          // Show post date/time if not editing
+          if (post.timestamp && editingPostId !== post.id) {
+            const postDateSpan = document.createElement('span');
+            postDateSpan.className = 'post-date';
+            postDateSpan.textContent = `• ${formatDateTime(post.timestamp)}`;
+            postMeta.appendChild(postDateSpan);
+          }
+
+          // Post type label, only if not editing (keep it in editing for clarity)
+          const postTypeSpan = document.createElement('span');
+          postTypeSpan.className = 'post-type';
+          let typeLabel = '';
+          switch (post.type) {
+            case 'poetry': typeLabel = 'Puisi / Teks'; break;
+            case 'art': typeLabel = 'Karya Seni'; break;
+            case 'music': typeLabel = 'Musik'; break;
+          }
+          postTypeSpan.textContent = typeLabel;
+          if (editingPostId !== post.id) {
+            postMeta.appendChild(document.createTextNode(' • '));
+          }
+          postMeta.appendChild(postTypeSpan);
+
+          postHeader.appendChild(postMeta);
+
+          // Content area
+          const postContent = document.createElement('div');
+          postContent.className = 'post-content';
+
+          if (editingPostId === post.id) {
+            if (post.type === 'poetry') {
+              const editTextarea = document.createElement('textarea');
+              editTextarea.className = 'edit-textarea';
+              editTextarea.value = post.content;
+              editTextarea.setAttribute('aria-label', 'Edit isi puisi / teks');
+              postContent.appendChild(editTextarea);
+            } else if (post.type === 'art') {
+              // Show current image preview + file input to replace
+              const img = document.createElement('img');
+              img.alt = `Karya seni berjudul ${post.title}`;
+              img.src = post.content;
+              img.style.marginBottom = '0.7rem';
+              postContent.appendChild(img);
+
+              const replaceLabel = document.createElement('label');
+              replaceLabel.textContent = 'Ganti gambar karya seni';
+              replaceLabel.htmlFor = `editArtFile_${post.id}`;
+              replaceLabel.style.fontWeight = '600';
+              postContent.appendChild(replaceLabel);
+
+              const fileInput = document.createElement('input');
+              fileInput.type = 'file';
+              fileInput.accept = 'image/*';
+              fileInput.className = 'edit-art-file';
+              fileInput.id = `editArtFile_${post.id}`;
+              fileInput.style.marginTop = '0.3rem';
+              postContent.appendChild(fileInput);
+            } else if (post.type === 'music') {
+              const audio = document.createElement('audio');
+              audio.controls = true;
+              audio.src = post.content;
+              audio.preload = "none";
+              audio.style.marginBottom = '0.5rem';
+              postContent.appendChild(audio);
+
+              const editMusicInput = document.createElement('input');
+              editMusicInput.type = 'text';
+              editMusicInput.className = 'edit-music-url';
+              editMusicInput.value = post.content;
+              editMusicInput.setAttribute('aria-label', 'Edit URL musik');
+              editMusicInput.placeholder = 'URL musik (mp3, ogg, wav, m4a)';
+              postContent.appendChild(editMusicInput);
+            }
+          } else {
+            // Normal display content
+            if (post.type === 'poetry') {
+              postContent.innerHTML = escapeAndPreserve(post.content);
+            } else if (post.type === 'art') {
+              const img = document.createElement('img');
+              img.alt = `Karya seni berjudul ${post.title}`;
+              img.src = post.content;
+              postContent.appendChild(img);
+            } else if (post.type === 'music') {
+              const audio = document.createElement('audio');
+              audio.controls = true;
+              audio.src = post.content;
+              audio.preload = "none";
+              postContent.appendChild(audio);
+            }
+          }
+
+          // Interactions
+          const interactions = document.createElement('div');
+          interactions.className = 'interactions';
+
+          if (editingPostId !== post.id) {
+            const voteCount = document.createElement('span');
+            voteCount.className = 'vote-count';
+            voteCount.textContent = `Suara: ${post.votes}`;
+            interactions.appendChild(voteCount);
+
+            const upvoteBtn = document.createElement('button');
+            upvoteBtn.className = 'btn-upvote';
+            upvoteBtn.textContent = '↑ Upvote';
+            upvoteBtn.setAttribute('aria-label', `Upvote karya ${post.title}`);
+            upvoteBtn.onclick = () => {
+              post.votes++;
+              savePosts();
+              renderPosts();
+            };
+            interactions.appendChild(upvoteBtn);
+
+            // Edit button
+            const editBtn = document.createElement('button');
+            editBtn.className = 'btn-edit';
+            editBtn.textContent = '✎ Edit';
+            editBtn.setAttribute('aria-label', `Edit karya ${post.title}`);
+            editBtn.onclick = () => {
+              if (editingPostId === null) {
+                editingPostId = post.id;
+                renderPosts();
+                // Scroll this post into view after render
+                setTimeout(() => {
+                  article.scrollIntoView({behavior: 'smooth'});
+                }, 100);
+              }
+            };
+            interactions.appendChild(editBtn);
+
+            // Delete button
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'btn-delete';
+            deleteBtn.textContent = '🗑️ Hapus';
+            deleteBtn.setAttribute('aria-label', `Hapus karya ${post.title}`);
+            deleteBtn.onclick = () => {
+              const conf = confirm(`Apakah Anda yakin ingin menghapus karya "${post.title}"? Tindakan ini tidak bisa dibatalkan.`);
+              if (conf) {
+                posts = posts.filter(p => p.id !== post.id);
+                if (editingPostId === post.id) editingPostId = null;
+                savePosts();
+                renderPosts();
+              }
+            };
+            interactions.appendChild(deleteBtn);
+          } else {
+            // Editing mode buttons: Cancel and Save
+            const cancelBtn = document.createElement('button');
+            cancelBtn.type = 'button';
+            cancelBtn.className = 'btn-cancel';
+            cancelBtn.textContent = 'Batal';
+            cancelBtn.setAttribute('aria-label', 'Batal edit');
+            cancelBtn.onclick = () => {
+              editingPostId = null;
+              renderPosts();
+            };
+            interactions.appendChild(cancelBtn);
+
+            const saveBtn = document.createElement('button');
+            saveBtn.type = 'button';
+            saveBtn.className = 'btn-save';
+            saveBtn.textContent = 'Simpan';
+            saveBtn.setAttribute('aria-label', 'Simpan perubahan');
+            saveBtn.onclick = () => {
+              const newTitle = article.querySelector('.edit-title').value.trim();
+              const newAuthor = article.querySelector('.edit-name').value.trim() || null;
+
+              if (!newTitle) {
+                alert('Judul tidak boleh kosong.');
+                return;
+              }
+
+              if (post.type === 'poetry') {
+                const newContent = article.querySelector('.edit-textarea').value.trim();
+                if (!newContent) {
+                  alert('Isi puisi / teks tidak boleh kosong.');
+                  return;
+                }
+                post.title = newTitle;
+                post.author = newAuthor;
+                post.content = newContent;
+                post.timestamp = (new Date()).toISOString();
+              } else if (post.type === 'art') {
+                const fileInput = article.querySelector('.edit-art-file');
+                if (fileInput.files.length > 0) {
+                  const file = fileInput.files[0];
+                  if (!file.type.startsWith('image/')) {
+                    alert('File harus berupa gambar.');
+                    return;
+                  }
+                  const reader = new FileReader();
+                  reader.onload = (event) => {
+                    post.title = newTitle;
+                    post.author = newAuthor;
+                    post.content = event.target.result;
+                    post.timestamp = (new Date()).toISOString();
+                    editingPostId = null;
+                    savePosts();
+                    renderPosts();
+                  };
+                  reader.readAsDataURL(file);
+                  return; // wait for async FileReader before saving and rendering
+                } else {
+                  post.title = newTitle;
+                  post.author = newAuthor;
+                  post.timestamp = (new Date()).toISOString();
+                  // content unchanged if no new file
+                }
+              } else if (post.type === 'music') {
+                const newMusicURL = article.querySelector('.edit-music-url').value.trim();
+                if (!newMusicURL) {
+                  alert('URL musik tidak boleh kosong.');
+                  return;
+                }
+                if (!newMusicURL.match(/\.(mp3|ogg|wav|m4a)(\?.*)?$/i)) {
+                  alert('URL harus mengarah ke file audio (mp3, ogg, wav, m4a).');
+                  return;
+                }
+                post.title = newTitle;
+                post.author = newAuthor;
+                post.content = newMusicURL;
+                post.timestamp = (new Date()).toISOString();
+              }
+              editingPostId = null;
+              savePosts();
+              renderPosts();
+            };
+            interactions.appendChild(saveBtn);
+          }
+
+          // Comments section
+          const commentsSection = document.createElement('section');
+          commentsSection.className = 'comments-section';
+          commentsSection.setAttribute('aria-label', `Komentar untuk karya ${post.title}`);
+          commentsSection.style.pointerEvents = editingPostId === post.id ? 'none' : 'auto';
+          commentsSection.style.opacity = editingPostId === post.id ? '0.6' : '1';
+
+          const commentsList = document.createElement('ul');
+          commentsList.className = 'comments-list';
+
+          post.comments.forEach((comment) => {
+            const li = document.createElement('li');
+            li.className = 'comment-item';
+
+            const commentAuthor = document.createElement('div');
+            commentAuthor.className = 'comment-author';
+            commentAuthor.textContent = comment.author ? comment.author : 'Anonim';
+
+            // Comment date span
+            if(comment.timestamp){
+              const commentDateSpan = document.createElement('span');
+              commentDateSpan.className = 'comment-date';
+              commentDateSpan.textContent = `• ${formatDateTime(comment.timestamp)}`;
+              commentAuthor.appendChild(commentDateSpan);
+            }
+
+            const commentText = document.createElement('p');
+            commentText.className = 'comment-text';
+            commentText.textContent = comment.text;
+
+            li.appendChild(commentAuthor);
+            li.appendChild(commentText);
+            commentsList.appendChild(li);
+          });
+
+          // Comment form disabled during editing
+          const commentForm = document.createElement('form');
+          commentForm.className = 'comment-form';
+          commentForm.setAttribute('aria-label', `Form komentar untuk karya ${post.title}`);
+          commentForm.style.pointerEvents = editingPostId === post.id ? 'none' : 'auto';
+          commentForm.style.opacity = editingPostId === post.id ? '0.6' : '1';
+
+          const commentNameInput = document.createElement('input');
+          commentNameInput.type = 'text';
+          commentNameInput.className = 'comment-name';
+          commentNameInput.placeholder = 'Nama (kosongkan untuk anonim)';
+          commentNameInput.setAttribute('aria-label', 'Nama pengomentar');
+
+          const commentTextInput = document.createElement('input');
+          commentTextInput.type = 'text';
+          commentTextInput.className = 'comment-text';
+          commentTextInput.placeholder = 'Tulis komentar positifmu...';
+          commentTextInput.required = true;
+          commentTextInput.setAttribute('aria-label', 'Isi komentar');
+
+          const commentSubmitBtn = document.createElement('button');
+          commentSubmitBtn.type = 'submit';
+          commentSubmitBtn.className = 'comment-submit';
+          commentSubmitBtn.textContent = 'Kirim';
+
+          commentForm.appendChild(commentNameInput);
+          commentForm.appendChild(commentTextInput);
+          commentForm.appendChild(commentSubmitBtn);
+
+          commentForm.addEventListener('submit', e => {
+            e.preventDefault();
+            if (editingPostId === post.id) return; // prevent commenting when editing
+
+            const cAuthor = commentNameInput.value.trim() || null;
+            const cText = commentTextInput.value.trim();
+
+            if (cText.length === 0) return;
+
+            const commentTimestamp = (new Date()).toISOString();
+
+            post.comments.push({author: cAuthor, text: cText, timestamp: commentTimestamp});
+            savePosts();
+            renderPosts();
+          });
+
+          commentsSection.appendChild(commentsList);
+          commentsSection.appendChild(commentForm);
+
+          // Assemble post article
+          article.appendChild(postHeader);
+          article.appendChild(postContent);
+          article.appendChild(interactions);
+          article.appendChild(commentsSection);
+
+          postsContainer.appendChild(article);
+        });
+      }
+
+      // Handle content type change to toggle input fields
+      contentTypeEl.addEventListener('change', () => {
+        const val = contentTypeEl.value;
+        inputPoetry.style.display = val === 'poetry' ? 'block' : 'none';
+        inputArt.style.display = val === 'art' ? 'block' : 'none';
+        inputMusic.style.display = val === 'music' ? 'block' : 'none';
+
+        // Clear irrelevant inputs when switching type
+        poetryContent.value = '';
+        artFile.value = '';
+        musicURL.value = '';
+      });
+
+      // Handle form submission to add new post
+      uploadForm.addEventListener('submit', e => {
+        e.preventDefault();
+        if (editingPostId !== null) {
+          alert('Selesaikan edit yang sedang berlangsung terlebih dahulu.');
+          return;
+        }
+        const type = contentTypeEl.value;
+        const author = uploadForm.authorName.value.trim() || null;
+        const title = uploadForm.title.value.trim();
+
+        if (!title) {
+          alert('Judul karya harus diisi.');
+          return;
+        }
+
+        const currentTimestamp = (new Date()).toISOString();
+
+        if (type === 'poetry') {
+          const text = poetryContent.value.trim();
+          if (!text) {
+            alert('Isi puisi atau teks harus diisi.');
+            return;
+          }
+          const newPost = {
+            id: Date.now().toString(),
+            type,
+            author,
+            title,
+            content: text,
+            votes: 0,
+            comments: [],
+            timestamp: currentTimestamp
+          };
+          posts.push(newPost);
+          savePosts();
+          renderPosts();
+          uploadForm.reset();
+          contentTypeEl.value = 'poetry';
+          contentTypeEl.dispatchEvent(new Event('change'));
+        } else if (type === 'art') {
+          const file = artFile.files[0];
+          if (!file) {
+            alert('Mohon unggah gambar karya seni.');
+            return;
+          }
+          if (!file.type.startsWith('image/')) {
+            alert('File harus berupa gambar.');
+            return;
+          }
+          const reader = new FileReader();
+          reader.onload = (event) => {
+            const base64img = event.target.result;
+            const newPost = {
+              id: Date.now().toString(),
+              type,
+              author,
+              title,
+              content: base64img,
+              votes: 0,
+              comments: [],
+              timestamp: currentTimestamp
+            };
+            posts.push(newPost);
+            savePosts();
+            renderPosts();
+            uploadForm.reset();
+            contentTypeEl.value = 'poetry'; // reset selector to poetry
+            contentTypeEl.dispatchEvent(new Event('change'));
+          };
+          reader.readAsDataURL(file);
+        } else if (type === 'music') {
+          const url = musicURL.value.trim();
+          if (!url) {
+            alert('Mohon masukkan URL musik (MP3 atau OGG).');
+            return;
+          }
+          // Basic validation for audio URL extension
+          if (!url.match(/\.(mp3|ogg|wav|m4a)(\?.*)?$/i)) {
+            alert('URL harus mengarah ke file audio (mp3, ogg, wav, m4a).');
+            return;
+          }
+          const newPost = {
+            id: Date.now().toString(),
+            type,
+            author,
+            title,
+            content: url,
+            votes: 0,
+            comments: [],
+            timestamp: currentTimestamp
+          };
+          posts.push(newPost);
+          savePosts();
+          renderPosts();
+          uploadForm.reset();
+          contentTypeEl.value = 'poetry'; // reset selector to poetry
+          contentTypeEl.dispatchEvent(new Event('change'));
+        }
+      });
+
+      // Initial setup
+      loadPosts();
+      renderPosts();
+      contentTypeEl.dispatchEvent(new Event('change'));
+    })();
+  </script>
+</body>
+</html>
+
